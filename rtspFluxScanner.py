@@ -2,30 +2,57 @@ import cv2
 import os
 import time
 from rtsp_path import RTSP_local_path
+import sys
+import threading
+
+def disable_print():
+    sys.stdout = open(os.devnull, 'w')
+    sys.stderr = open(os.devnull, 'w')
+
+def enable_print():
+    sys.stdout = sys.__stdout__
+    sys.stderr = sys.__stderr__
+
+def rtspFluxScannerStarter(ip):
+    RTSPScanner = rtspFluxScanner(ip)
+    RTSPScanner.Analize() 
 
 class rtspFluxScanner:
     _ip = None
-    _rtsp_path = None
     def __init__(self, _ip) -> None:
         self._ip = _ip
 
+    def __rtsp_path_finder_thread(self, i):
+        disable_print()
+        rtsp_url = "rtsp://" + self._ip + "/" + i
+        cap = cv2.VideoCapture(rtsp_url)
+        capisopen = cap.isOpened()
+        enable_print()
+        if capisopen:
+            print("a stream was find at: " + rtsp_url)
+            frame = self.__rtsp_flux_reader(cap)
+            if frame is None:
+                print("a stream was lost at: " + rtsp_url)
+                return None
+            self.__rtsp_data_saver(frame, i)
+            cap.release()
+            return 1
+        else:
+           print(i + ": path dosnt work")
+           return None
+
     def __rtsp_path_finder(self):
+        threads_list = []
+
         # cherche le path du stream
         for i in RTSP_local_path:
-            if i == "end":
-                print("No stream found: Path not found")
-                return None
-            rtsp_url = "rtsp://" + self._ip + "/" + i
-            cap = cv2.VideoCapture(rtsp_url)
-                
-            if cap.isOpened():
-                print("a stream was find at: " + rtsp_url)
-                break
-            else:
-                print(i + ": path dosnt work")
-        self._rtsp_path = rtsp_url
-        print("Camera stream open")
-        return cap
+            thread = threading.Thread(target=self.__rtsp_path_finder_thread, args=(i,))
+            threads_list.append(thread)
+        for i in threads_list:
+            i.start()
+        for i in threads_list:
+            i.join()
+
     
     #Reseptione le flux video
     def __rtsp_flux_reader(self, cap):
@@ -38,31 +65,24 @@ class rtspFluxScanner:
         return frame
     
     #savegarde les data
-    def __rtsp_data_saver(self, frame):
-        screenPath = self._ip + "/" + self._ip + ".jpg"
+    def __rtsp_data_saver(self, frame, rtsp_path):
+        screenPath = self._ip + "/" + self._ip + "_" + rtsp_path.replace("/","_") + ".jpg"
         dataPath = self._ip + "/" + self._ip + ".txt"
         if not os.path.exists(self._ip):
             os.mkdir(self._ip)
 
         #sauvegarde le path complet dans un fichier texte
         f = open(dataPath, "a")
-        f.write(self._rtsp_path)
+        f.write(str(self._ip + "/" + rtsp_path + "\n"))
         f.close()
 
         #sauvegarde un screenshot de la camera en jpg
         cv2.imwrite(screenPath, frame)
 
-        print("Stream was on at: " + self._rtsp_path)
+        print("Stream was on at: " + str(self._ip + rtsp_path))
         print("screen was save at " + screenPath)
 
     #Fonction principale, lance l'execution de la classe
     def Analize(self):
-        cap = self.__rtsp_path_finder()
-        if cap is None:
-            return 84
-        frame = self.__rtsp_flux_reader(cap)
-        if frame is None:
-            return 84
-        self.__rtsp_data_saver(frame)
-        cap.release()
+        self.__rtsp_path_finder()
         return 0
