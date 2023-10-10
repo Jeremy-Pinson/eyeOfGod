@@ -1,14 +1,29 @@
 #main.py
 
 from rtspFluxScanner import rtspFluxScanner
+from rtspFluxScanner import rtspFluxScannerStarter
 from rtspIpFinder import rtspIPFinder
+import threading
 
-ip = "92.151.95.124"
-False_ip = "92.151.95.123"
+ip_start = "1.72.0.0"
+Ip_end = "1.79.255.255"
+RTSPIpList = []
 
-ipFinder = rtspIPFinder("92.151.95.120", "92.151.95.130")
+ipFinder = rtspIPFinder(ip_start, Ip_end)
 ipFinder.startScan()
 RTSPIpList = ipFinder.getRTSPList()
+
 print(RTSPIpList)
-#flusScanner = rtspFluxScanner(False_ip)
-#flusScanner.Analize()
+
+threads_list = []
+for i in RTSPIpList :
+    thread = threading.Thread(target=rtspFluxScannerStarter, args=(i,))
+    threads_list.append(thread)
+
+for i in threads_list:
+    i.start()
+
+for i in threads_list:
+    i.join()
+
+print("work done")
