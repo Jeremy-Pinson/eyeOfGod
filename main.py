@@ -5,8 +5,8 @@ from rtspFluxScanner import rtspFluxScannerStarter
 from rtspIpFinder import rtspIPFinder
 import threading
 
-ip_start = "1.72.0.0"
-Ip_end = "1.79.255.255"
+ip_start = "95.120.0.0"
+Ip_end = "95.127.255.255"
 RTSPIpList = []
 
 ipFinder = rtspIPFinder(ip_start, Ip_end)

@@ -59,7 +59,7 @@ class rtspFluxScanner:
         ret, frame = cap.read()
         print("Reading flux")
         if not ret:
-            print("Rtsp path was found: " + self._rtsp_path + "; but cant read it")
+            print("Rtsp path was found: " + self._ip + "; but cant read it")
             return None
         time.sleep(3) #attend que le flux ce stabilise pour prendre la capture
         return frame
