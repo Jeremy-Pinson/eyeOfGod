@@ -41,7 +41,7 @@ class rtspIPFinder:
             nbIpScan += 1
     
         for i in Thread_list:
-            #time.sleep(0.01)
+            time.sleep(0.01)
             i.start()
 
         for i in Thread_list:
