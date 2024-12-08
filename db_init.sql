@@ -1,6 +1,6 @@
 CREATE DATABASE eogdb;
 USE eogdb;
-CREATE TABLE ip_list ( ip_id int NOT NULL AUTO_INCREMENT primary key, ip INT(11) UNSIGNED NOT NULL, is_scan BOOLEAN DEFAULT FALSE);
+CREATE TABLE ip_list ( ip_id int NOT NULL AUTO_INCREMENT primary key, ip INT(11) UNSIGNED NOT NULL, is_ano_try BOOLEAN DEFAULT FALSE, is_dict_try BOOLEAN DEFAULT FALSE);
 CREATE TABLE flux_list (
     flux_id int NOT NULL AUTO_INCREMENT primary key,
     ip INT(11) UNSIGNED NOT NULL,
