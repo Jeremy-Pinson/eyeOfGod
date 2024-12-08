@@ -1,12 +1,11 @@
 #main.py
 
-from rtspFluxScanner import rtspFluxScanner
 from rtspFluxScanner import rtspFluxScannerStarter
 from rtspIpFinder import rtspIPFinder
 import threading
 
-ip_start = "95.120.0.0"
-Ip_end = "95.127.255.255"
+ip_start = "193.250.0.0"
+Ip_end = "193.254.255.255"
 RTSPIpList = []
 
 ipFinder = rtspIPFinder(ip_start, Ip_end)

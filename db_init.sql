@@ -1,0 +1,12 @@
+CREATE DATABASE eogdb;
+USE eogdb;
+CREATE TABLE ip_list ( ip_id int NOT NULL AUTO_INCREMENT primary key, ip INT(11) UNSIGNED NOT NULL, is_scan BOOLEAN DEFAULT FALSE);
+CREATE TABLE flux_list (
+    flux_id int NOT NULL AUTO_INCREMENT primary key,
+    ip INT(11) UNSIGNED NOT NULL,
+    stream_path VARCHAR(128) NOT NULL,
+    user VARCHAR(128) DEFAULT NULL,
+    pass VARCHAR(128) DEFAULT NULL,
+    screen_file VARCHAR(255) DEFAULT NULL,
+    country VARCHAR(128) DEFAULT NULL
+);
