@@ -38,7 +38,6 @@ class rtspFluxScanner:
             cap.release()
             return 1
         else:
-           print(i + ": path dosnt work")
            return None
 
     def __rtsp_path_finder(self):
@@ -57,7 +56,6 @@ class rtspFluxScanner:
     #Reseptione le flux video
     def __rtsp_flux_reader(self, cap):
         ret, frame = cap.read()
-        print("Reading flux")
         if not ret:
             print("Rtsp path was found: " + self._ip + "; but cant read it")
             return None
