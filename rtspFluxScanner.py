@@ -81,7 +81,7 @@ class rtspFluxScanner:
         print("screen was save at " + screenPath)
 
     def dictionary_attack(self):
-        print("dictionnary attack")
+        print("dictionnary attack: ") + self._ip
         for path in RTSP_local_path:
             for user in RTSP_user:
                 for _pass in RTSP_pass:
