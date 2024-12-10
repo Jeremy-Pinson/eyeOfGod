@@ -7,8 +7,8 @@ RTSP_local_path = ["1",
 "1/h264major",
 "1/stream1",
 "11",
-"12",
-"end"]
+"12"
+]
 
 RTSP_user = ["admin",
 "Admin",

