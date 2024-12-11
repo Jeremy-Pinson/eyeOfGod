@@ -19,8 +19,8 @@ RTSP_user = ["admin",
 "service",
 "Dinion",
 "administrator",
-"admin1",
-"end"]
+"admin1"
+]
 
 RTSP_pass = ["admin",
 "9999",
@@ -43,5 +43,4 @@ RTSP_pass = ["admin",
 "ubnt",
 "wbox123",
 "service"
-
 ]
