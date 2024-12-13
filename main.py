@@ -3,12 +3,18 @@
 from rtspFluxScanner import rtspFluxScannerStarter
 from rtspIpFinder import rtspIPFinder
 from multiprocessing import Process
+import sys
+import time
 
 
 if __name__ == "__main__":
-    ip_start = "109.190.0.0"
-    Ip_end = "109.190.50.0"
+    if len(sys.argv) < 3:
+        print("need 2 ip for range scan")
+        exit()
+    ip_start = sys.argv[1]
+    Ip_end = sys.argv[2]
     RTSPIpList = []
+    print("Scan from " + ip_start + " to " + Ip_end)
 
 #parcour la range d'ip et cherche des port rtsp d'ouvert
     ipFinder = rtspIPFinder(ip_start, Ip_end)
@@ -22,6 +28,7 @@ if __name__ == "__main__":
         procces = Process(target=rtspFluxScannerStarter, args=(i, ))
         procces_list.append(procces)
         procces.start()
+        time.sleep(1)
 
     for i in procces_list:
         i.join()
