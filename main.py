@@ -21,7 +21,9 @@ if __name__ == "__main__":
     ipFinder.startScan()
     RTSPIpList = ipFinder.getRTSPList()
 
-    print(RTSPIpList) #affiche la liste d'ip contenant des ports rtsp
+    group_of_rtspList = [RTSPIpList[x:x+20] for x in range(0, len(RTSPIpList), 20)]
+
+    print(group_of_rtspList) #affiche la liste d'ip contenant des ports rtsp
 
     procces_list = []
     for i in RTSPIpList :
